@@ -1,1 +1,1 @@
-# ProjectJanus
+# Project Janus (The Legacy-Modern Bridge)
