@@ -17,10 +17,28 @@ class ModernAdapter
 {
     private:
     // a place to store the data we convert
+        vector<shared_ptr<ModernDoc>> documents;
 
     public:
     //constructor
         ModernAdapter() = default;
 
-        void Run();
+        static void OnDataReceived(LegacyDoc* doc, void* user_data){
+            ModernAdapter* adapter = static_cast<ModernAdapter*>(user_data);
+            shared_ptr<ModernDoc> modernDoc = make_shared<ModernDoc>();
+            modernDoc->id = doc->id;
+            modernDoc->title = string(doc->title);
+            modernDoc->body = string(doc->body);
+            adapter->documents.push_back(modernDoc);
+
+            // Clean up legacy document memory
+            delete[] doc->title;
+            delete[] doc->body;
+            delete doc;
+        };
+
+        void Run(){
+            LegacyDataFeed legacyFeed;
+            legacyFeed.StartStream(OnDataReceived, this);
+        };
 };
