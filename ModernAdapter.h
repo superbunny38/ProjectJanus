@@ -22,6 +22,10 @@ class ModernAdapter
     public:
     //constructor
         ModernAdapter() = default;
+        //Add a public method to ModernAdapter (e.g., const vector<shared_ptr<ModernDoc>>& GetDocuments() const) so we can inspect the results.
+        const vector<shared_ptr<ModernDoc>>& GetDocuments() const {
+            return documents;
+        }
 
         static void OnDataReceived(LegacyDoc* doc, void* user_data){
             ModernAdapter* adapter = static_cast<ModernAdapter*>(user_data);
