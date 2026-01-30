@@ -22,7 +22,7 @@ This file represents a "Read-Only" library provided by another team. I cannot fi
 
 - **Key Patterns**: Adapter Pattern, Producer-Consumer, Sharding
 
-- **Memory Management**: RAII, 'std::unique_ptr', 'std::span', Zero-Copy semantics
+- **Memory Management**: RAII, `std::unique_ptr`, 'std::span', Zero-Copy semantics
 
 - **Concurrency**: 'std::jthread', 'std::condition_variable', Fine-grained Locking
 
@@ -66,7 +66,7 @@ This file represents a "Read-Only" library provided by another team. I cannot fi
 
 **Status**: 📅 Planned
 
-- **Challenge**: std::map causes cache misses due to pointer chasing.
+- **Challenge**: `std::map` causes cache misses due to pointer chasing.
 
 - **Solution**: Profiling the code and replacing node-based containers with contiguous memory containers (std::vector + std::binary_search) to improve CPU cache locality.
 
