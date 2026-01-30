@@ -12,7 +12,7 @@ The goal is to attach a modern ranking and indexing engine to an ancient data in
 
 To replicate a real-world production environment, I adhere to one strict rule:
 
-**I am strictly forbidden from modifying 'LegacyDataFeed.h'.**
+**I am strictly forbidden from modifying `LegacyDataFeed.h`.**
 
 This file represents a "Read-Only" library provided by another team. I cannot fix their memory leaks or add locks to their code. I must handle their "bad" code externally via the Adapter Pattern and rigorous RAII principles to prevent it from infecting the modern codebase.
 
@@ -22,9 +22,9 @@ This file represents a "Read-Only" library provided by another team. I cannot fi
 
 - **Key Patterns**: Adapter Pattern, Producer-Consumer, Sharding
 
-- **Memory Management**: RAII, `std::unique_ptr`, 'std::span', Zero-Copy semantics
+- **Memory Management**: RAII, `std::unique_ptr`, `std::span`, Zero-Copy semantics
 
-- **Concurrency**: 'std::jthread', 'std::condition_variable', Fine-grained Locking
+- **Concurrency**: `std::jthread`, `std::condition_variable`, Fine-grained Locking
 
 - **Optimization**: Cache Locality (Data Oriented Design), Custom Hash Maps
 
@@ -68,7 +68,7 @@ This file represents a "Read-Only" library provided by another team. I cannot fi
 
 - **Challenge**: `std::map` causes cache misses due to pointer chasing.
 
-- **Solution**: Profiling the code and replacing node-based containers with contiguous memory containers (std::vector + std::binary_search) to improve CPU cache locality.
+- **Solution**: Profiling the code and replacing node-based containers with contiguous memory containers (`std::vector` + `std::binary_search`) to improve CPU cache locality.
 
 ## 🚀 Getting Started
 
