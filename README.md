@@ -44,7 +44,7 @@ This file represents a "Read-Only" library provided by another team. I cannot fi
 
 - **Challenge**: The Legacy Feed blocks and is slow (simulated network/disk IO). The Indexer is fast.
 
-- **Solution**: A thread-safe generic Queue using std::condition_variable. This decouples the Producer (Legacy Feed) from the Consumer (Indexer), allowing them to operate at different speeds without data loss.
+- **Solution**: A thread-safe generic Queue using `std::condition_variable`. This decouples the Producer (Legacy Feed) from the Consumer (Indexer), allowing them to operate at different speeds without data loss.
 
 ### Phase 3: The Sharded Inverted Index
 
