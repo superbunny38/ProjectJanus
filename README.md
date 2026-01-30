@@ -50,7 +50,7 @@ This file represents a "Read-Only" library provided by another team. I cannot fi
 
 **Status**: 📅 Planned
 
-- **Challenge**: A single std::map with a Global Lock kills parallelism.
+- **Challenge**: A single `std::map` with a Global Lock kills parallelism.
 
 - **Solution**: Sharding. The index is split into 16 smaller hashmaps based on keyword hashing. This allows multiple threads to write to the index simultaneously with minimal lock contention.
 
