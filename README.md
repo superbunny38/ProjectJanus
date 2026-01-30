@@ -80,16 +80,16 @@ This file represents a "Read-Only" library provided by another team. I cannot fi
 
 **Build Instructions**
 
-'''
+```
 mkdir build
 cd build
 cmake ..
 make
 ./ProjectJanus
-'''
+```
 
 ## 📂 Project Structure
-'''
+```
 ProjectJanus/
 ├── src/
 │   ├── main.cpp            # Entry point
@@ -102,7 +102,7 @@ ProjectJanus/
 │   └── ...
 ├── CMakeLists.txt
 └── README.md
-'''
+```
 
 ## ✅ Progress Log
 
