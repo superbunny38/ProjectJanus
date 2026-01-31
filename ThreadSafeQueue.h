@@ -1,3 +1,4 @@
+//Buffer
 #include <queue>
 #include <mutex>
 #include <thread> 
@@ -16,11 +17,16 @@ class ThreadSafeQueue {
     public:
         void push(T value){
             {lock_guard<mutex> lock(Mutex);
-            q.push(move(value));}
+            Q.push(move(value));}
             Cv.notify_one();
         }
 
         bool pop(T& result){
-
+            unique_lock<mutex> lock(Mutex);
+            cv.wait(lock, [this]{ return !Q.empty(); });
+            
+            result = move(Q.front());
+            Q.pop();
+            return true;
         }
 };
