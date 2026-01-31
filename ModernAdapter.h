@@ -1,5 +1,6 @@
 #pragma once
 #include "LegacyDataFeed.h"
+#include "ThreadSafeQueue.h"
 #include <string>
 #include <vector>   
 #include <memory>
@@ -17,11 +18,14 @@ class ModernAdapter
 {
     private:
     // a place to store the data we convert
-        vector<shared_ptr<ModernDoc>> documents;
+        ThreadSafeQueue<shared_ptr<ModernDoc>> documents;
 
     public:
-    //constructor
-        ModernAdapter() = default;
+        //constructor
+        ModernAdapter(){
+            //accept threadsafequeue as a reference
+            
+        }
         //Add a public method to ModernAdapter (e.g., const vector<shared_ptr<ModernDoc>>& GetDocuments() const) so we can inspect the results.
         const vector<shared_ptr<ModernDoc>>& GetDocuments() const {
             return documents;

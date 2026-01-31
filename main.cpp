@@ -15,11 +15,12 @@ void run(){
 }
 
 int main() {
-    thread t1(run);
+    thread processingThread(run);
 
-    cout << "Main thread is doing other work..." << endl;
 
-    t1.join();
+    cout<<"Main thread is free to do other work while data is being processed..." << endl;
 
+    processingThread.join();
+    
     return 0;
 }
