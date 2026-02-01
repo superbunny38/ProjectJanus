@@ -13,6 +13,7 @@ class ThreadSafeQueue {
         queue<T> Q;
         mutable mutex Mutex;
         condition_variable Cv;
+        bool shutdown_flag = false;
     
     public:
         void push(T value){
@@ -23,10 +24,19 @@ class ThreadSafeQueue {
 
         bool pop(T& result){
             unique_lock<mutex> lock(Mutex);
-            cv.wait(lock, [this]{ return !Q.empty(); });
+            cv.wait(lock, [this]{ return !Q.empty() || shutdown_flag; });
             
+            if (shutdown_flag && Q.empty()) {
+                return false; // Indicate that the queue is shutting down
+            }
+
             result = move(Q.front());
             Q.pop();
             return true;
+        }
+        void shutdown() {
+            {lock_guard<mutex> lock(Mutex);
+            shutdown_flag = true;}
+            Cv.notify_all();
         }
 };
