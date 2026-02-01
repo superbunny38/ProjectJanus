@@ -32,7 +32,7 @@ This file represents a "Read-Only" library provided by another team. I cannot fi
 
 ### Phase 1: The Adapter Layer ("The Sanitizer")
 
-**Status**: 🚧 In Progress
+**Status**: ✔️ Completed
 
 - **Challenge**: The Legacy Feed emits raw pointers (LegacyDoc*) allocated with new. If not handled, these leak memory.
 
@@ -40,7 +40,7 @@ This file represents a "Read-Only" library provided by another team. I cannot fi
 
 ### Phase 2: The "Kafka-Lite" Broker
 
-**Status**: 📅 Planned
+**Status**: ✔️ Completed
 
 - **Challenge**: The Legacy Feed blocks and is slow (simulated network/disk IO). The Indexer is fast.
 
@@ -48,7 +48,7 @@ This file represents a "Read-Only" library provided by another team. I cannot fi
 
 ### Phase 3: The Sharded Inverted Index
 
-**Status**: 📅 Planned
+**Status**: ✔️ Completed
 
 - **Challenge**: A single `std::map` with a Global Lock kills parallelism.
 
