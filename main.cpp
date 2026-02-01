@@ -7,12 +7,12 @@
 using namespace std;
 
 int main() {
-    ThreadSafeQueue<shared_ptr<ModernDoc>> documentQueue;
-
+    //The Setup()
+    ThreadSafeQueue<shared_ptr<ModernDoc>> documentQueue;//
     ModernAdapter adapter(documentQueue);
 
     thread producerThread([&]() {
-        adapter.Run();
+        adapter.Run();//Do the work
         documentQueue.shutdown(); // Signal that production is done
     });
 
