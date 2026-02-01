@@ -3,6 +3,7 @@
 #include <string>
 #include "ModernAdapter.h"
 #include "ThreadSafeQueue.h"
+#include "InvertedIndex.h"
 
 using namespace std;
 
@@ -10,6 +11,7 @@ int main() {
     //The Setup()
     ThreadSafeQueue<shared_ptr<ModernDoc>> documentQueue;//
     ModernAdapter adapter(documentQueue);
+    InvertedIndex index;
 
     /*
     thread: This launches a new timeline. Everything inside the { ... } runs in parallel with the rest of your main function.
