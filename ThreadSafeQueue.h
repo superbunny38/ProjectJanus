@@ -24,7 +24,7 @@ class ThreadSafeQueue {
 
         bool pop(T& result){
             unique_lock<mutex> lock(Mutex);
-            cv.wait(lock, [this]{ return !Q.empty() || shutdown_flag; });
+            Cv.wait(lock, [this]{ return !Q.empty() || shutdown_flag; });
             
             if (shutdown_flag && Q.empty()) {
                 return false; // Indicate that the queue is shutting down
