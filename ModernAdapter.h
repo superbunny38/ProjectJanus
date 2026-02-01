@@ -18,18 +18,12 @@ class ModernAdapter
 {
     private:
     // a place to store the data we convert
-        ThreadSafeQueue<shared_ptr<ModernDoc>> documents;
+    // We need to tell the class that documents is just a pointer/reference to the queue sitting in main.
+        ThreadSafeQueue<shared_ptr<ModernDoc>>& documents;
 
     public:
-        //constructor
-        ModernAdapter(){
-            //accept threadsafequeue as a reference
-            
-        }
-        //Add a public method to ModernAdapter (e.g., const vector<shared_ptr<ModernDoc>>& GetDocuments() const) so we can inspect the results.
-        const vector<shared_ptr<ModernDoc>>& GetDocuments() const {
-            return documents;
-        }
+        //constructor to accept ThreadSafeQueue as a reference
+        ModernAdapter(ThreadSafeQueue<shared_ptr<ModernDoc>>& queue):documents(queue) {}
 
         static void OnDataReceived(LegacyDoc* doc, void* user_data){
             ModernAdapter* adapter = static_cast<ModernAdapter*>(user_data);
@@ -37,7 +31,7 @@ class ModernAdapter
             modernDoc->id = doc->id;
             modernDoc->title = string(doc->title);
             modernDoc->body = string(doc->body);
-            adapter->documents.push_back(modernDoc);
+            adapter->documents.push(modernDoc);
 
             // Clean up legacy document memory
             delete[] doc->title;
