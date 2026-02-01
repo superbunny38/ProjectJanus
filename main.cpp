@@ -1,26 +1,28 @@
-#include "ModernAdapter.h"
 #include <iostream>
 #include <thread>
+#include <string>
+#include "ModernAdapter.h"
+#include "ThreadSafeQueue.h"
 
 using namespace std;
 
-void run(){
-    ModernAdapter adapter;
-    adapter.Run();
-
-    const auto& docs = adapter.GetDocuments();
-    for (const auto& doc : docs) {
-        cout << "Document ID: " << doc->id << ", Title: " << doc->title << endl;
-    }
-}
-
 int main() {
-    thread processingThread(run);
+    ThreadSafeQueue<shared_ptr<ModernDoc>> documentQueue;
 
+    ModernAdapter adapter(documentQueue);
 
-    cout<<"Main thread is free to do other work while data is being processed..." << endl;
+    thread producerThread([&]() {
+        adapter.Run();
+        documentQueue.shutdown(); // Signal that production is done
+    });
 
-    processingThread.join();
-    
+    shared_ptr<ModernDoc> doc;
+    cout << "---Search Indexer Started---" << endl;
+    while (documentQueue.pop(doc)) {
+        cout << "Indexed Document ID: " << doc->id << ", Title: " << doc->title << endl;
+    }
+
+    producerThread.join();
+    cout << "---Search Indexer Stopped---" << endl;
     return 0;
 }
