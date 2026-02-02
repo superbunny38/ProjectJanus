@@ -22,8 +22,14 @@ class InvertedIndex{
     private:
         static const int NUM_SHARDS = 16; 
         
-        struct Shard{
+        struct Shard_unoptimal{
             unordered_map<string, vector<int>> index; // term -> list of document IDs
+            shared_mutex mutex; // For thread-safe access
+        };
+
+        struct Shard{
+            vector<pair<string, vector<int>>> index; // term -> list of document IDs
+            bool is_sorted = false;
             shared_mutex mutex; // For thread-safe access
         };
 
@@ -39,14 +45,56 @@ class InvertedIndex{
             stringstream ss(content);
             string word;
 
-            while(ss >> word){
+            // while(ss >> word){
+            //     size_t shardIndex = getShardIndex(word);
+            //     Shard& shard = shards[shardIndex];
+
+            //     {
+            //         unique_lock<shared_mutex> lock(shard.mutex);
+            //         shard.index[word].push_back(docId);
+            //     }
+            // }
+
+            while (ss>>word)
+            {
                 size_t shardIndex = getShardIndex(word);
                 Shard& shard = shards[shardIndex];
 
-                {
-                    unique_lock<shared_mutex> lock(shard.mutex);
-                    shard.index[word].push_back(docId);
+                unique_lock<shared_mutex> lock(shard.mutex);
+
+                shard.index.push_back({word, {docId}});
+                shard.is_sorted = false;
+                
+            }
+            
+        }
+
+        void finalize(){
+            for(auto& shard:shards){
+                unique_lock<shared_mutex> lock(shard.mutex);
+                if(!shard.is_sorted){
+                    sort(shard.index.begin(), shard.index.end(), [](const auto& a, const auto& b){
+                        return a.first < b.first;
+                    });
+                    shard.is_sorted = true;
                 }
+
+                if (shard.index.empty()) continue;
+
+                vector<pair<string, vector<int>>> compactIndex;
+                compactIndex.reserve(shard.index.size());
+
+                compactIndex.push_back(shard.index[0]);
+                for(size_t i=1; i<shard.index.size(); ++i){
+                    if(shard.index[i].first == compactIndex.back().first){
+                        compactIndex.back().second.push_back(shard.index[i].second[0]);
+                    }else{
+                        compactIndex.push_back(shard.index[i]);
+                    }
+                }
+
+                shard.index = move(compactIndex);
+                shard.is_sorted = true;
             }
         }
 
@@ -55,29 +103,36 @@ class InvertedIndex{
             Shard& shard = shards[shardIndex];
 
             shared_lock<shared_mutex> lock(shard.mutex);
-            auto it = shard.index.find(term);
-            if(it != shard.index.end()){
-                return it->second;
-            }else{
+
+            if(!shard.is_sorted){
                 return {};
             }
+
+            auto it = lower_bound(shard.index.begin(), shard.index.end(), term, [](const auto& a, const string& b){
+                return a.first < b;
+            });
+
+            if(it != shard.index.end() && it->first == term){
+                return it->second;
+            }
+            return {};
         }
 
         vector<pair<int,int>> search(const string& term){
             vector<int> raw_results = lookup(term);
-            unordered_map<int,int> scores;
 
-            for(int docId:raw_results){
+            unordered_map<int, int> scores;
+
+            for(int docId : raw_results) {
                 scores[docId]++;
-            }
+            }   
 
-            vector<pair<int,int>> sorted_results;
-
-            for(const auto& entry:scores){
+            vector<pair<int, int>> sorted_results;
+            for(const auto& entry : scores) {
                 sorted_results.push_back({entry.first, entry.second});
             }
 
-            sort(sorted_results.begin(), sorted_results.end(), [](const pair<int,int>& a, const pair<int,int>& b){
+            sort(sorted_results.begin(), sorted_results.end(), [](const auto& a, const auto& b) {
                 return b.second < a.second;
             });
 

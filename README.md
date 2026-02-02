@@ -56,7 +56,7 @@ This file represents a "Read-Only" library provided by another team. I cannot fi
 
 ### Phase 4: Query Engine & Ranking
 
-**Status**: 📅 Planned
+**Status**: ✔️ Completed
 
 - **Challenge**: Retrieving relevant results quickly.
 
@@ -64,7 +64,7 @@ This file represents a "Read-Only" library provided by another team. I cannot fi
 
 ### Phase 5: Optimization 
 
-**Status**: 📅 Planned
+**Status**: ✔️ Completed
 
 - **Challenge**: `std::map` causes cache misses due to pointer chasing.
 
@@ -106,12 +106,12 @@ ProjectJanus/
 
 ## ✅ Progress Log
 
-- [ ] Day 46-47: Adapter Pattern & RAII Compliance
+- [✔️] Day 46-47: Adapter Pattern & RAII Compliance
 
-- [ ] Day 48-49: Thread-Safe Queue Implementation
+- [✔️] Day 48-49: Thread-Safe Queue Implementation
 
-- [ ] Day 50-52: Sharded Inverted Index
+- [✔️] Day 50-52: Sharded Inverted Index
 
-- [ ] Day 53-54: Query Engine & Ranking Logic
+- [✔️] Day 53-54: Query Engine & Ranking Logic
 
-- [ ] Day 55: Optimization (Vector vs Map)
+- [✔️] Day 55: Optimization (Vector vs Map)

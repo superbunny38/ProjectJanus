@@ -40,6 +40,9 @@ int main() {
         producerThread.join();
     }
 
+    cout << "--- Finalizing Index (Sorting & Merging) ---" << endl;
+    index.finalize();
+
     cout <<"---Performing Search for 'cloud'---" << endl;
     auto results = index.search("cloud");
 
